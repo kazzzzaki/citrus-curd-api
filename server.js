@@ -15,7 +15,14 @@ const setupExpressServer = () => {
   app.get("/api/user", async function (req, res) {
     let userData;
     if (req.query.limit) {
-      userData = await db.user.findAll({ limit: req.query.limit });
+      if (req.query.offset) {
+        userData = await db.user.findAll({
+          limit: req.query.limit,
+          offset: req.query.offset,
+        });
+      } else {
+        userData = await db.user.findAll({ limit: req.query.limit });
+      }
     } else {
       userData = await db.user.findAll();
     }
