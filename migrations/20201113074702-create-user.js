@@ -11,14 +11,8 @@ module.exports = {
       name: {
         type: Sequelize.STRING,
       },
-      birth: {
-        type: Sequelize.DATE,
-      },
-      country_code: {
-        type: Sequelize.INTEGER,
-      },
-      height: {
-        type: Sequelize.INTEGER,
+      token: {
+        type: Sequelize.STRING,
       },
       created_at: {
         allowNull: false,
