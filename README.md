@@ -4,6 +4,9 @@
 
 crud-api for task data
 
+Sequelize
+https://sequelize.org/master/
+
 how to make seeds
 https://sequelize.org/master/manual/migrations.html#creating-the-first-seed
 
