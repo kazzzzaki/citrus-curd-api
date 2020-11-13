@@ -12,13 +12,13 @@ describe("test server", () => {
     request = chai.request(app);
   });
 
-  describe("test get", () => {
-    describe("GET /api/user - get all users", () => {
+  describe("hello world test", () => {
+    describe("GET /hello - hello world", () => {
       it("should return all users", async () => {
         //SETUP
 
         //EXCERCISE
-        const res = await request.get("/api/user");
+        const res = await request.get("/api/hello");
 
         //ASSERT
         res.should.have.status(200);

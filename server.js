@@ -6,7 +6,8 @@ const setupExpressServer = () => {
   const app = express();
   app.use(express.json());
 
-  app.get("/", function (req, res) {
+  //GET Hello
+  app.get("/api/hello", function (req, res) {
     res.send("Hello World!");
   });
 
