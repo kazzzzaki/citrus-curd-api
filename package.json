@@ -7,7 +7,19 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "sequelize": "sequelize"
+    "dev": "nodemon ./index.js",
+    "sequelize": "sequelize",
+    "lint": "eslint --fix --ext .js",
+    "test": "mocha spec && yarn lint",
+    "push": "git push origin master",
+    "psql": "psql postgres://kazuaki@localhost:5432/database_development",
+    "migrate": "yarn sequelize db:migrate --env development",
+    "create_migration": "yarn sequelize migration:create"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   },
   "dependencies": {
     "express": "^4.17.1",
@@ -20,6 +32,10 @@
     "eslint": "^7.13.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-config-problems": "^5.0.0",
-    "eslint-plugin-prettier": "^3.1.4"
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.3.0",
+    "mocha": "^8.2.1",
+    "prettier": "^2.1.2",
+    "pretty-quick": "^3.1.0"
   }
 }
