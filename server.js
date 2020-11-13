@@ -13,7 +13,12 @@ const setupExpressServer = () => {
 
   //GET METHOD
   app.get("/api/user", async function (req, res) {
-    const userData = await db.user.findAll();
+    let userData;
+    if (req.query.limit) {
+      userData = await db.user.findAll({ limit: req.query.limit });
+    } else {
+      userData = await db.user.findAll();
+    }
     res.send(userData);
   });
 

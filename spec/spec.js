@@ -8,7 +8,7 @@ chai.should();
 // Another reason we separated creating our server from starting it
 const app = setupExpressServer();
 let request;
-describe("test server", () => {
+describe("tasklist API server", () => {
   beforeEach(() => {
     request = chai.request(app);
   });
