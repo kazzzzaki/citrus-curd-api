@@ -34,28 +34,59 @@ describe("tasklist API server", () => {
       //TODO:データまで確認する方法が見つかったら、修正した
       it("should return all users", async () => {
         //SETUP
-        const userData = await db.user.findAll();
+        const userData = await db.user.findAll({ raw: true });
+        const expect = userData.map((user) => {
+          user.createdAt = user.createdAt.toJSON();
+          user.updatedAt = user.updatedAt.toJSON();
+          return user;
+        });
 
         //EXCERCISE
         const res = await request.get("/api/user");
 
         //ASSERT
         res.should.have.status(200);
-        JSON.parse(res.text).length.should.equal(userData.length);
+        JSON.parse(res.text).should.deep.equal(expect);
 
         //TEARDOWN
       });
 
       it("should return users limit 3", async () => {
         //SETUP
-        const userData = await db.user.findAll({ limit: 3 });
-
+        const userData = await db.user.findAll({ raw: true, limit: 3 });
+        const expect = userData.map((user) => {
+          user.createdAt = user.createdAt.toJSON();
+          user.updatedAt = user.updatedAt.toJSON();
+          return user;
+        });
         //EXCERCISE
         const res = await request.get("/api/user?limit=3");
 
         //ASSERT
         res.should.have.status(200);
-        JSON.parse(res.text).length.should.equal(userData.length);
+        JSON.parse(res.text).should.deep.equal(expect);
+
+        //TEARDOWN
+      });
+
+      it("should return users limit 2 offset 2", async () => {
+        //SETUP
+        const userData = await db.user.findAll({
+          raw: true,
+          limit: 2,
+          offset: 2,
+        });
+        const expect = userData.map((user) => {
+          user.createdAt = user.createdAt.toJSON();
+          user.updatedAt = user.updatedAt.toJSON();
+          return user;
+        });
+        //EXCERCISE
+        const res = await request.get("/api/user?limit=2&offset=2");
+
+        //ASSERT
+        res.should.have.status(200);
+        JSON.parse(res.text).should.deep.equal(expect);
 
         //TEARDOWN
       });
