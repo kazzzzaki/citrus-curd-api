@@ -4,7 +4,7 @@
   "description": "for solo-project",
   "main": "index.js",
   "author": "Kazuaki Ueshima",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "private": false,
   "scripts": {
     "dev": "nodemon ./index.js",

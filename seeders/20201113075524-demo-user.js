@@ -24,6 +24,24 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
+      {
+        name: "Mike",
+        token: "testtoken",
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        name: "Chris",
+        token: "testtoken",
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      {
+        name: "Tom",
+        token: "testtoken",
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
     ]);
   },
 
