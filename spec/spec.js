@@ -34,28 +34,28 @@ describe("test server", () => {
       //TODO:データまで確認する方法が見つかったら、修正した
       it("should return all users", async () => {
         //SETUP
-        //const userData = await db.user.findAll();
+        const userData = await db.user.findAll();
 
         //EXCERCISE
         const res = await request.get("/api/user");
 
         //ASSERT
         res.should.have.status(200);
-        JSON.parse(res.text).length.should.equal(5);
+        JSON.parse(res.text).length.should.equal(userData.length);
 
         //TEARDOWN
       });
 
       it("should return users limit 3", async () => {
         //SETUP
-        const userData = await db.user.findAll();
+        const userData = await db.user.findAll({ limit: 3 });
 
         //EXCERCISE
         const res = await request.get("/api/user?limit=3");
 
         //ASSERT
         res.should.have.status(200);
-        JSON.parse(res.text).length.should.equal(3);
+        JSON.parse(res.text).length.should.equal(userData.length);
 
         //TEARDOWN
       });
