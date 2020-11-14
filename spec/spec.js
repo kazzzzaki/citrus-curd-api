@@ -32,7 +32,6 @@ describe("tasklist API server", () => {
   describe("tasklist API test", () => {
     describe("/api/user test", () => {
       describe("GET /api/user - get users data", () => {
-        //TODO:データまで確認する方法が見つかったら、修正した
         it("should return all users", async () => {
           //SETUP
           const userData = await db.user.findAll({ raw: true });
@@ -131,86 +130,116 @@ describe("tasklist API server", () => {
 
           //TEARDOWN
         });
+      });
+      describe("POST /api/user - create users data", () => {
+        it("should create users", async () => {
+          //SETUP
+          const newUserData = {
+            name: "newUser",
+            token: "newUserToken",
+          };
 
-        describe("POST /api/user - create users data", () => {
-          it("should create users", async () => {
-            //SETUP
-            const newUserData = {
-              name: "newUser",
-              token: "newUserToken",
-            };
+          //EXCERCISE
+          const res = await request.post("/api/user").send(newUserData);
 
-            //EXCERCISE
-            const res = await request.post("/api/user").send(newUserData);
-
-            //ASSERT
-            res.should.have.status(201);
-            const userData = await db.user.findAll({
-              raw: true,
-              where: { name: "newUser" },
-            });
-            const expect = userData.map((user) => {
-              user.createdAt = user.createdAt.toJSON();
-              user.updatedAt = user.updatedAt.toJSON();
-              return user;
-            });
-            JSON.parse(res.text).should.deep.equal(expect);
-
-            //TEARDOWN
-            await db.user.destroy({
-              where: { name: "newUser" },
-            });
+          //ASSERT
+          res.should.have.status(201);
+          const userData = await db.user.findAll({
+            raw: true,
+            where: { name: "newUser" },
           });
-          it("should return error when user name already exists", async () => {
-            //SETUP
-            const newUserData = {
-              name: "kazuaki",
-              token: "newUserToken",
-            };
-
-            //EXCERCISE
-            const res = await request.post("/api/user").send(newUserData);
-
-            //ASSERT
-            res.should.have.status(400);
-            res.text.should.equal("this user name is already used");
-            const userCount = await db.user.findAndCountAll({
-              where: { name: "kazuaki" },
-            });
-            userCount.count.should.equal(1);
-
-            //TEARDOWN
+          const expect = userData.map((user) => {
+            user.createdAt = user.createdAt.toJSON();
+            user.updatedAt = user.updatedAt.toJSON();
+            return user;
           });
-          it("should return error when user name is number", async () => {
-            //SETUP
-            const newUserData = {
-              name: "123",
-              token: "newUserToken",
-            };
+          JSON.parse(res.text).should.deep.equal(expect);
 
-            //EXCERCISE
-            const res = await request.post("/api/user").send(newUserData);
-
-            //ASSERT
-            res.should.have.status(400);
-            res.text.should.equal("user name must not be ONLY NUMBERS");
-            const userCount = await db.user.findAndCountAll({
-              where: { name: "123" },
-            });
-            userCount.count.should.equal(0);
-
-            //TEARDOWN
+          //TEARDOWN
+          await db.user.destroy({
+            where: { name: "newUser" },
           });
         });
-        describe("PATCH /api/user - get users data", () => {
-          //TODO:
+        it("should return error when user name already exists", async () => {
+          //SETUP
+          const newUserData = {
+            name: "kazuaki",
+            token: "newUserToken",
+          };
+
+          //EXCERCISE
+          const res = await request.post("/api/user").send(newUserData);
+
+          //ASSERT
+          res.should.have.status(400);
+          res.text.should.equal("this user name is already used");
+          const userCount = await db.user.findAndCountAll({
+            where: { name: "kazuaki" },
+          });
+          userCount.count.should.equal(1);
+
+          //TEARDOWN
         });
-        describe("PUT /api/user - get users data", () => {
-          //TODO:
+        it("should return error when user name is number", async () => {
+          //SETUP
+          const newUserData = {
+            name: "123",
+            token: "newUserToken",
+          };
+
+          //EXCERCISE
+          const res = await request.post("/api/user").send(newUserData);
+
+          //ASSERT
+          res.should.have.status(400);
+          res.text.should.equal("user name must not be ONLY NUMBERS");
+          const userCount = await db.user.findAndCountAll({
+            where: { name: "123" },
+          });
+          userCount.count.should.equal(0);
+
+          //TEARDOWN
         });
-        describe("DELETE /api/user - get users data", () => {
-          //TODO:
+      });
+      describe("PATCH /api/user - get users data", () => {
+        it("should patch users with id 1", async () => {
+          //SETUP
+          const patchUserData = {
+            name: "patchUser",
+            token: "patchUserToken",
+          };
+
+          //EXCERCISE
+          const res = await request.patch("/api/user/2").send(patchUserData);
+
+          //ASSERT
+          res.should.have.status(200);
+          JSON.parse(res.text).name.should.equal(patchUserData.name);
+          JSON.parse(res.text).token.should.equal(patchUserData.token);
+          //TEARDOWN
         });
+        it("should patch users with id 1", async () => {
+          //SETUP
+          const patchUserData = {
+            name: "patchUser",
+            token: "patchUserToken",
+          };
+
+          //EXCERCISE
+          const res = await request.patch("/api/user/2").send(patchUserData);
+
+          //ASSERT
+          res.should.have.status(200);
+          JSON.parse(res.text).name.should.equal(patchUserData.name);
+          JSON.parse(res.text).token.should.equal(patchUserData.token);
+          //TEARDOWN
+        });
+      });
+      describe("PUT /api/user - get users data", () => {
+        //TODO:
+      });
+      describe("DELETE /api/user - get users data", () => {
+        //TODO:
       });
     });
     describe("/api/task test", () => {

@@ -11,7 +11,8 @@ const setupExpressServer = () => {
     res.send("Hello World!");
   });
 
-  //GET METHOD
+  ////GET METHOD
+  //api/userのパターン
   app.get("/api/user", async function (req, res) {
     let userData;
     if (req.query.limit) {
@@ -42,7 +43,6 @@ const setupExpressServer = () => {
       //数値型の場合はwhereで検索する
       userData = await db.user.findAll({ where: { id: idOrName } });
     }
-
     res.send(userData);
   });
 
