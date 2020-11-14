@@ -181,6 +181,26 @@ describe("tasklist API server", () => {
 
             //TEARDOWN
           });
+          it("should return error when user name is number", async () => {
+            //SETUP
+            const newUserData = {
+              name: "123",
+              token: "newUserToken",
+            };
+
+            //EXCERCISE
+            const res = await request.post("/api/user").send(newUserData);
+
+            //ASSERT
+            res.should.have.status(400);
+            res.text.should.equal("user name must not be ONLY NUMBERS");
+            const userCount = await db.user.findAndCountAll({
+              where: { name: "123" },
+            });
+            userCount.count.should.equal(0);
+
+            //TEARDOWN
+          });
         });
         describe("PATCH /api/user - get users data", () => {
           //TODO:
