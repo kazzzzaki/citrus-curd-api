@@ -90,6 +90,26 @@ describe("tasklist API server", () => {
 
         //TEARDOWN
       });
+      it("should return users by id", async () => {
+        //SETUP
+        const userData = await db.user.findAll({
+          raw: true,
+          where: { id: 1 },
+        });
+        const expect = userData.map((user) => {
+          user.createdAt = user.createdAt.toJSON();
+          user.updatedAt = user.updatedAt.toJSON();
+          return user;
+        });
+        //EXCERCISE
+        const res = await request.get("/api/user/1");
+
+        //ASSERT
+        res.should.have.status(200);
+        JSON.parse(res.text).should.deep.equal(expect);
+
+        //TEARDOWN
+      });
     });
   });
 });

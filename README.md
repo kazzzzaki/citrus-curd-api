@@ -10,7 +10,7 @@ https://sequelize.org/master/
 how to make seeds
 https://sequelize.org/master/manual/migrations.html#creating-the-first-seed
 
-yarn script で作成したコマンド
+###yarn script で作成したコマンド
 yarn migrate : table drop と create table してくれる。
 yarn seed : テーブルデータの bulk delete と bulk insert をしてくれる
 yarn psql : psql の database_development データベースにログインしてくれる
