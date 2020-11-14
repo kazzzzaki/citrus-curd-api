@@ -202,7 +202,7 @@ describe("tasklist API server", () => {
         });
       });
       describe("PATCH /api/user - get users data", () => {
-        it("should patch users with id 1", async () => {
+        it("should patch users with id 2", async () => {
           //SETUP
           const patchUserData = {
             name: "patchUser",
@@ -217,22 +217,36 @@ describe("tasklist API server", () => {
           JSON.parse(res.text).name.should.equal(patchUserData.name);
           JSON.parse(res.text).token.should.equal(patchUserData.token);
           //TEARDOWN
+          const tearDownUserData = {
+            name: "John",
+            token: "testtoken",
+          };
+          await db.user.update(tearDownUserData, {
+            where: { id: 2 },
+          });
         });
-        it("should patch users with id 1", async () => {
+        it("should patch users with name", async () => {
           //SETUP
           const patchUserData = {
-            name: "patchUser",
-            token: "patchUserToken",
+            name: "patchUser2",
+            token: "patchUserToken2",
           };
 
           //EXCERCISE
-          const res = await request.patch("/api/user/2").send(patchUserData);
+          const res = await request.patch("/api/user/mike").send(patchUserData);
 
           //ASSERT
           res.should.have.status(200);
           JSON.parse(res.text).name.should.equal(patchUserData.name);
           JSON.parse(res.text).token.should.equal(patchUserData.token);
           //TEARDOWN
+          const tearDownUserData = {
+            name: "Mike",
+            token: "testtoken",
+          };
+          await db.user.update(tearDownUserData, {
+            where: { name: patchUserData.name },
+          });
         });
       });
       describe("PUT /api/user - get users data", () => {
