@@ -225,7 +225,7 @@ describe("tasklist API server", () => {
             where: { id: 2 },
           });
         });
-        it("should patch users with name", async () => {
+        it("should return error with name", async () => {
           //SETUP
           const patchUserData = {
             name: "patchUser2",
@@ -236,17 +236,9 @@ describe("tasklist API server", () => {
           const res = await request.patch("/api/user/mike").send(patchUserData);
 
           //ASSERT
-          res.should.have.status(200);
-          JSON.parse(res.text).name.should.equal(patchUserData.name);
-          JSON.parse(res.text).token.should.equal(patchUserData.token);
+          res.should.have.status(400);
+          res.text.should.equal("patch needs id as number");
           //TEARDOWN
-          const tearDownUserData = {
-            name: "Mike",
-            token: "testtoken",
-          };
-          await db.user.update(tearDownUserData, {
-            where: { name: patchUserData.name },
-          });
         });
       });
       describe("PUT /api/user - get users data", () => {

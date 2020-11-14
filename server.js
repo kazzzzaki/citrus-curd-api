@@ -67,17 +67,37 @@ const setupExpressServer = () => {
   });
 
   //PATCH METHOD
-  app.patch("/api/user/:id", async function (req, res) {
-    //TODO find by id and name
-    const userData = await db.user.update(req.body, {
-      where: { id: req.params.id },
-    });
-    if (userData) {
-      const userData = await db.user.findOne({ where: { id: req.params.id } });
-      res.send(userData);
+  app.patch("/api/user/:reqId", async function (req, res) {
+    const { reqId } = req.params;
+    let userData;
+    if (isNaN(reqId)) {
+      //TODO:数値型以外の場合は現状エラー。今後実装する方法について検討する。
+      // const userData = await db.user.update(req.body, {
+      //   where: { name: reqId },
+      // });
+      // if (userData) {
+      //   const userData = await db.user.findOne({
+      //     where: { name: reqId },
+      //   });
+      //   res.send(userData);
+      // } else {
+      res.status(400).send("patch needs id as number");
+      // }
     } else {
-      res.status(400).end();
+      //数値型の場合はwhereで検索する
+      const userData = await db.user.update(req.body, {
+        where: { id: reqId },
+      });
+      if (userData) {
+        const userData = await db.user.findOne({
+          where: { id: reqId },
+        });
+        res.send(userData);
+      } else {
+        res.status(400).end();
+      }
     }
+    res.send(userData);
   });
 
   //DELETE METHOD
