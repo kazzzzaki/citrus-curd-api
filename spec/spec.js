@@ -145,13 +145,21 @@ describe("tasklist API server", () => {
 
             //ASSERT
             res.should.have.status(201);
-            const expect = await db.user.findAll({
+            const userData = await db.user.findAll({
               raw: true,
               where: { name: "newUser" },
+            });
+            const expect = userData.map((user) => {
+              user.createdAt = user.createdAt.toJSON();
+              user.updatedAt = user.updatedAt.toJSON();
+              return user;
             });
             JSON.parse(res.text).should.deep.equal(expect);
 
             //TEARDOWN
+            await db.user.destroy({
+              where: { name: "newUser" },
+            });
           });
         });
         describe("PATCH /api/user - get users data", () => {
