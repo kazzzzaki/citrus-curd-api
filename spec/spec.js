@@ -161,6 +161,26 @@ describe("tasklist API server", () => {
               where: { name: "newUser" },
             });
           });
+          it("should return error when user name already exists", async () => {
+            //SETUP
+            const newUserData = {
+              name: "kazuaki",
+              token: "newUserToken",
+            };
+
+            //EXCERCISE
+            const res = await request.post("/api/user").send(newUserData);
+
+            //ASSERT
+            res.should.have.status(400);
+            res.text.should.equal("this user name is already used");
+            const userCount = await db.user.findAndCountAll({
+              where: { name: "kazuaki" },
+            });
+            userCount.should.equal(1);
+
+            //TEARDOWN
+          });
         });
         describe("PATCH /api/user - get users data", () => {
           //TODO:

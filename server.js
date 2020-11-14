@@ -48,9 +48,7 @@ const setupExpressServer = () => {
 
   //POST METHOD
   app.post("/api/user", async function (req, res) {
-    const result = await db.user.create(req.body);
-    console.log(result);
-    console.log(req.body);
+    await db.user.create(req.body);
     const userData = await db.user.findAll({ where: { name: req.body.name } });
 
     res.status(201).send(userData);
