@@ -29,8 +29,20 @@ const setupExpressServer = () => {
     res.send(userData);
   });
 
-  app.get("/api/user/:id", async function (req, res) {
-    const userData = await db.user.findAll({ where: { id: req.params.id } });
+  //api/user/paramsのパターン
+  app.get("/api/user/:idOrName", async function (req, res) {
+    const { idOrName } = req.params;
+    let userData;
+    if (isNaN(idOrName)) {
+      //数値型以外の場合はnameで検索する
+      userData = await db.user.findAll({
+        where: { name: idOrName },
+      });
+    } else {
+      //数値型の場合はwhereで検索する
+      userData = await db.user.findAll({ where: { id: idOrName } });
+    }
+
     res.send(userData);
   });
 
