@@ -48,10 +48,18 @@ const setupExpressServer = () => {
 
   //POST METHOD
   app.post("/api/user", async function (req, res) {
-    await db.user.create(req.body);
-    const userData = await db.user.findAll({ where: { name: req.body.name } });
-
-    res.status(201).send(userData);
+    const userCount = await db.user.findAndCountAll({
+      where: { name: req.body.name },
+    });
+    if (userCount.count === 0) {
+      await db.user.create(req.body);
+      const userData = await db.user.findAll({
+        where: { name: req.body.name },
+      });
+      res.status(201).send(userData);
+    } else {
+      res.status(400).send("this user name is already used");
+    }
   });
 
   //PATCH METHOD

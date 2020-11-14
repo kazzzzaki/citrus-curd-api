@@ -177,7 +177,7 @@ describe("tasklist API server", () => {
             const userCount = await db.user.findAndCountAll({
               where: { name: "kazuaki" },
             });
-            userCount.should.equal(1);
+            userCount.count.should.equal(1);
 
             //TEARDOWN
           });
