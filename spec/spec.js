@@ -132,29 +132,27 @@ describe("tasklist API server", () => {
           //TEARDOWN
         });
 
-        describe("POST /api/user - get users data", () => {
-          //TODO:データまで確認する方法が見つかったら、修正した
-          it("should return all users", async () => {
+        describe("POST /api/user - create users data", () => {
+          it("should create users", async () => {
             //SETUP
-            const userData = await db.user.findAll({ raw: true });
-            const expect = userData.map((user) => {
-              user.createdAt = user.createdAt.toJSON();
-              user.updatedAt = user.updatedAt.toJSON();
-              return user;
-            });
+            const newUserData = {
+              name: "newUser",
+              token: "newUserToken",
+            };
 
             //EXCERCISE
-            const res = await request.get("/api/user");
+            const res = await request.post("/api/user").send(newUserData);
 
             //ASSERT
-            res.should.have.status(200);
+            res.should.have.status(201);
+            const expect = await db.user.findAll({
+              raw: true,
+              where: { name: "newUser" },
+            });
             JSON.parse(res.text).should.deep.equal(expect);
 
             //TEARDOWN
           });
-        });
-        describe("POST /api/user - get users data", () => {
-          //TODO:
         });
         describe("PATCH /api/user - get users data", () => {
           //TODO:
