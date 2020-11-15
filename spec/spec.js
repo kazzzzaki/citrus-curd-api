@@ -283,6 +283,30 @@ describe("tasklist API server", () => {
       });
       describe("DELETE /api/user - get users data", () => {
         //TODO:
+        it("should delete users with id 5", async () => {
+          //SETUP
+          const deleteUserData = {
+            name: "DeleteUser",
+            token: "deletetesttoken",
+          };
+          await db.user.create(deleteUserData);
+          const userData = await db.user.findAll({
+            raw: true,
+            where: { name: deleteUserData.name },
+          });
+
+          //EXCERCISE
+          const res = await request.put(`/api/user/${userData.id}`);
+
+          //ASSERT
+          res.should.have.status(200);
+          const userCount = await db.user.findAndCountAll({
+            where: { name: "DeleteUser" },
+          });
+          userCount.count.should.equal(0);
+
+          //TEARDOWN
+        });
       });
     });
     describe("/api/task test", () => {
