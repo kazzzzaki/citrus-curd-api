@@ -46,7 +46,7 @@ const setupExpressServer = () => {
     res.send(userData);
   });
 
-  //POST METHOD
+  ////POST METHOD
   app.post("/api/user", async function (req, res) {
     if (isNaN(req.body.name)) {
       const userCount = await db.user.findAndCountAll({
@@ -66,7 +66,7 @@ const setupExpressServer = () => {
     }
   });
 
-  //PATCH METHOD
+  ////PATCH METHOD
   app.patch("/api/user/:reqId", async function (req, res) {
     const { reqId } = req.params;
     let userData;
@@ -82,6 +82,40 @@ const setupExpressServer = () => {
       //   res.send(userData);
       // } else {
       res.status(400).send("patch needs id as number");
+      // }
+    } else {
+      //数値型の場合はwhereで検索する
+      const userData = await db.user.update(req.body, {
+        where: { id: reqId },
+      });
+      if (userData) {
+        const userData = await db.user.findOne({
+          where: { id: reqId },
+        });
+        res.send(userData);
+      } else {
+        res.status(400).end();
+      }
+    }
+    res.send(userData);
+  });
+
+  ////PUT METHOD
+  app.put("/api/user/:reqId", async function (req, res) {
+    const { reqId } = req.params;
+    let userData;
+    if (isNaN(reqId)) {
+      //TODO:数値型以外の場合は現状エラー。今後実装する方法について検討する。
+      // const userData = await db.user.update(req.body, {
+      //   where: { name: reqId },
+      // });
+      // if (userData) {
+      //   const userData = await db.user.findOne({
+      //     where: { name: reqId },
+      //   });
+      //   res.send(userData);
+      // } else {
+      res.status(400).send("put needs id as number");
       // }
     } else {
       //数値型の場合はwhereで検索する
