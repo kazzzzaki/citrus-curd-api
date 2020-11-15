@@ -2,6 +2,7 @@ const express = require("express");
 const db = require("../models/index");
 const userRegistValidator = require("./userRegistValidator");
 const userUpdateValidator = require("./userUpdateValidator");
+const userQueryIdValidator = require("./userQueryIdValidator");
 const { validationResult } = require("express-validator");
 
 const setupExpressServer = () => {
@@ -202,8 +203,15 @@ const setupExpressServer = () => {
   });
 
   //DELETE METHOD
-  app.delete("/api/user/:reqId", async function (req, res) {
+  app.delete("/api/user/:reqId", userQueryIdValidator, async function (
+    req,
+    res
+  ) {
     const { reqId } = req.params;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
     const userData = await db.user.destroy({ where: { id: reqId } });
     if (userData) {
       res.status(200).end();

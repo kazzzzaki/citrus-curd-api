@@ -649,7 +649,6 @@ describe("tasklist API server", () => {
 
           //EXCERCISE
           const res = await request.delete(`/api/user/${userData.id}`);
-
           //ASSERT
           res.should.have.status(200);
           const userCount = await db.user.findAndCountAll({
@@ -661,13 +660,21 @@ describe("tasklist API server", () => {
         });
         it("should return error with name", async () => {
           //SETUP
-
+          const error = {
+            errors: [
+              {
+                value: "mike",
+                msg: "id in the url param must be a number",
+                param: "reqId",
+                location: "params",
+              },
+            ],
+          };
           //EXCERCISE
           const res = await request.delete("/api/user/mike");
-
           //ASSERT
           res.should.have.status(400);
-          res.text.should.equal("delete needs id as number");
+          res.body.should.deep.equal(error);
           //TEARDOWN
         });
       });
