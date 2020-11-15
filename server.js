@@ -135,8 +135,10 @@ const setupExpressServer = () => {
   });
 
   //DELETE METHOD
-  app.delete("/api/user/:id", async function (req, res) {
-    const userData = await db.user.destroy({ where: { id: req.params.id } });
+  app.delete("/api/user/:reqId", async function (req, res) {
+    const { reqId } = req.params;
+    const userData = await db.user.destroy({ where: { id: reqId } });
+    console.log(userData);
     if (userData) {
       res.status(200).end();
     } else {

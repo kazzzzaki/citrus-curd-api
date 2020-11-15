@@ -283,20 +283,20 @@ describe("tasklist API server", () => {
       });
       describe("DELETE /api/user - get users data", () => {
         //TODO:
-        it("should delete users with id 5", async () => {
+        it("should delete users with id", async () => {
           //SETUP
           const deleteUserData = {
             name: "DeleteUser",
             token: "deletetesttoken",
           };
           await db.user.create(deleteUserData);
-          const userData = await db.user.findAll({
+          const userData = await db.user.findOne({
             raw: true,
             where: { name: deleteUserData.name },
           });
 
           //EXCERCISE
-          const res = await request.put(`/api/user/${userData.id}`);
+          const res = await request.delete(`/api/user/${userData.id}`);
 
           //ASSERT
           res.should.have.status(200);
