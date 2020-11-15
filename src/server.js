@@ -1,6 +1,7 @@
 const express = require("express");
 const db = require("../models/index");
-const validator = require("./userValidator");
+const userRegistValidator = require("./userRegistValidator");
+const userUpdateValidator = require("./userUpdateValidator");
 const { validationResult } = require("express-validator");
 
 const setupExpressServer = () => {
@@ -50,7 +51,7 @@ const setupExpressServer = () => {
   });
 
   ////POST METHOD
-  app.post("/api/user", validator, async function (req, res) {
+  app.post("/api/user", userRegistValidator, async function (req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -70,7 +71,7 @@ const setupExpressServer = () => {
   });
 
   ////PATCH METHOD
-  app.patch("/api/user/:reqId", validator, async function (req, res) {
+  app.patch("/api/user/:reqId", userUpdateValidator, async function (req, res) {
     const { reqId } = req.params;
     const errors = validationResult(req);
     let userData;
