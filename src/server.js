@@ -56,18 +56,29 @@ const setupExpressServer = () => {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const userCount = await db.user.findAndCountAll({
-      where: { name: req.body.name },
-    });
-    if (userCount.count === 0) {
-      await db.user.create(req.body);
-      const userData = await db.user.findAll({
+    //TODO: いずれ共通化したい。
+    if (req.body.name !== undefined) {
+      const userCount = await db.user.findAndCountAll({
         where: { name: req.body.name },
       });
-      res.status(201).send(userData);
-    } else {
-      res.status(400).send("this user name is already used");
+      if (userCount.count !== 0) {
+        return res.status(400).json({
+          errors: [
+            {
+              value: req.body.name,
+              msg: "this user name is already used",
+              param: "name",
+              location: "body",
+            },
+          ],
+        });
+      }
     }
+    await db.user.create(req.body);
+    const userData = await db.user.findAll({
+      where: { name: req.body.name },
+    });
+    res.status(201).send(userData);
   });
 
   ////PATCH METHOD
@@ -88,14 +99,25 @@ const setupExpressServer = () => {
         ],
       });
     }
+    //TODO: いずれ共通化したい。
     if (req.body.name !== undefined) {
       const userCount = await db.user.findAndCountAll({
         where: { name: req.body.name },
       });
       if (userCount.count !== 0) {
-        return res.status(400).send("this user name is already used");
+        return res.status(400).json({
+          errors: [
+            {
+              value: req.body.name,
+              msg: "this user name is already used",
+              param: "name",
+              location: "body",
+            },
+          ],
+        });
       }
     }
+
     if (isNaN(reqId)) {
       //TODO:数値型以外の場合は現状エラー。今後実装する方法について検討する。
       // const userData = await db.user.update(req.body, {
@@ -164,7 +186,6 @@ const setupExpressServer = () => {
   app.delete("/api/user/:reqId", async function (req, res) {
     const { reqId } = req.params;
     const userData = await db.user.destroy({ where: { id: reqId } });
-    console.log(userData);
     if (userData) {
       res.status(200).end();
     } else {

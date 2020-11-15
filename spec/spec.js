@@ -166,13 +166,23 @@ describe("tasklist API server", () => {
             name: "kazuaki",
             token: "newUserToken",
           };
+          const error = {
+            errors: [
+              {
+                value: "kazuaki",
+                msg: "this user name is already used",
+                param: "name",
+                location: "body",
+              },
+            ],
+          };
 
           //EXCERCISE
           const res = await request.post("/api/user").send(newUserData);
 
           //ASSERT
           res.should.have.status(400);
-          res.text.should.equal("this user name is already used");
+          res.body.should.deep.equal(error);
           const userCount = await db.user.findAndCountAll({
             where: { name: "kazuaki" },
           });
@@ -312,12 +322,22 @@ describe("tasklist API server", () => {
             name: "kazuaki",
           };
 
+          const error = {
+            errors: [
+              {
+                value: "kazuaki",
+                msg: "this user name is already used",
+                param: "name",
+                location: "body",
+              },
+            ],
+          };
           //EXCERCISE
           const res = await request.patch("/api/user/2").send(newUserData);
 
           //ASSERT
           res.should.have.status(400);
-          res.text.should.equal("this user name is already used");
+          res.body.should.deep.equal(error);
           const userCount = await db.user.findAndCountAll({
             where: { name: "kazuaki" },
           });
