@@ -5,6 +5,7 @@ const userUpdateValidator = require("./userUpdateValidator");
 const userQueryIdValidator = require("./userQueryIdValidator");
 const { validationResult } = require("express-validator");
 const cors = require("cors");
+const taskQueryValidator = require("./taskQueryValidator");
 
 const setupExpressServer = () => {
   /* return configured express app */
@@ -149,9 +150,44 @@ const setupExpressServer = () => {
   //////
   //////api/task/paramsのパターン
   //////
+  app.use(
+    "/api/task/:reqUserId",
+    taskQueryValidator,
+    async (req, res, next) => {
+      const { reqUserId } = req.params;
+      const userToken = req.query.token;
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      const userData = await db.user.findAndCountAll({
+        where: { id: reqUserId, token: userToken },
+      });
+      console.log("test");
+      if (userData.count === 1) {
+        next();
+      } else {
+        res.status(400).send({
+          errors: [
+            {
+              value: userToken,
+              msg: "the token sent was incorrect",
+              param: "token",
+              location: "query",
+            },
+          ],
+        });
+      }
+    }
+  );
+
   ////GET
-  app.get("/api/task/:reqUserId", async function (req, res) {
+  app.get("/api/task/:reqUserId", taskQueryValidator, async function (
+    req,
+    res
+  ) {
     const { reqUserId } = req.params;
+
     const taskData = await db.task.findAll({ where: { userid: reqUserId } });
     res.send(taskData);
   });

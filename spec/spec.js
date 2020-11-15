@@ -769,7 +769,7 @@ describe("tasklist API server", () => {
           //SETUP
           const taskData = await db.task.findAll({
             raw: true,
-            where: { userid: 1 },
+            where: { userid: 2 },
           });
           const expect = taskData.map((task) => {
             task.due = task.due.toJSON();
@@ -779,11 +779,33 @@ describe("tasklist API server", () => {
           });
 
           //EXCERCISE
-          const res = await request.get("/api/task/1");
+          const res = await request.get("/api/task/2?token=testtoken");
 
           //ASSERT
           res.should.have.status(200);
           JSON.parse(res.text).should.deep.equal(expect);
+
+          //TEARDOWN
+        });
+        it("should return 400 when token is incorrect", async () => {
+          //SETUP
+          const error = {
+            errors: [
+              {
+                value: "testtoken2",
+                msg: "the token sent was incorrect",
+                param: "token",
+                location: "query",
+              },
+            ],
+          };
+
+          //EXCERCISE
+          const res = await request.get("/api/task/2?token=testtoken2");
+
+          //ASSERT
+          res.should.have.status(400);
+          res.body.should.deep.equal(error);
 
           //TEARDOWN
         });
