@@ -242,7 +242,29 @@ describe("tasklist API server", () => {
         });
       });
       describe("PUT /api/user - get users data", () => {
-        //TODO:
+        it("should put users with id 4", async () => {
+          //SETUP
+          const patchUserData = {
+            name: "putUser",
+            token: "putUserToken",
+          };
+
+          //EXCERCISE
+          const res = await request.put("/api/user/4").send(patchUserData);
+
+          //ASSERT
+          res.should.have.status(200);
+          JSON.parse(res.text).name.should.equal(patchUserData.name);
+          JSON.parse(res.text).token.should.equal(patchUserData.token);
+          //TEARDOWN
+          const tearDownUserData = {
+            name: "Chris",
+            token: "testtoken",
+          };
+          await db.user.update(tearDownUserData, {
+            where: { id: 4 },
+          });
+        });
       });
       describe("DELETE /api/user - get users data", () => {
         //TODO:
