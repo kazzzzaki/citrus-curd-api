@@ -8,4 +8,5 @@ module.exports = [
     .not()
     .isInt()
     .withMessage("user name must not be ONLY NUMBERS"),
+  check("token").not().isEmpty().withMessage("user token is REQUIRED"),
 ];

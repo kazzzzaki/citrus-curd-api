@@ -229,10 +229,6 @@ describe("tasklist API server", () => {
           //ASSERT
           res.should.have.status(400);
           res.body.should.deep.equal(error);
-          const userCount = await db.user.findAndCountAll({
-            where: { name: "123" },
-          });
-          userCount.count.should.equal(0);
 
           //TEARDOWN
         });
@@ -244,7 +240,7 @@ describe("tasklist API server", () => {
           const error = {
             errors: [
               {
-                msg: "user token is required",
+                msg: "user token is REQUIRED",
                 param: "token",
                 location: "body",
               },
@@ -256,10 +252,6 @@ describe("tasklist API server", () => {
           //ASSERT
           res.should.have.status(400);
           res.body.should.deep.equal(error);
-          const userCount = await db.user.findAndCountAll({
-            where: { name: "123" },
-          });
-          userCount.count.should.equal(0);
 
           //TEARDOWN
         });
@@ -301,6 +293,35 @@ describe("tasklist API server", () => {
           //ASSERT
           res.should.have.status(400);
           res.text.should.equal("patch needs id as number");
+          //TEARDOWN
+        });
+        it("should return error when user name is number", async () => {
+          //SETUP
+          const newUserData = {
+            name: "123",
+            token: "newUserToken",
+          };
+          const error = {
+            errors: [
+              {
+                value: "123",
+                msg: "user name must not be ONLY NUMBERS",
+                param: "name",
+                location: "body",
+              },
+            ],
+          };
+          //EXCERCISE
+          const res = await request.patch("/api/user/2").send(newUserData);
+
+          //ASSERT
+          res.should.have.status(400);
+          res.body.should.deep.equal(error);
+          const userCount = await db.user.findAndCountAll({
+            where: { name: "123" },
+          });
+          userCount.count.should.equal(0);
+
           //TEARDOWN
         });
       });

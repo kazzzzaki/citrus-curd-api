@@ -72,7 +72,11 @@ const setupExpressServer = () => {
   ////PATCH METHOD
   app.patch("/api/user/:reqId", validator, async function (req, res) {
     const { reqId } = req.params;
+    const errors = validationResult(req);
     let userData;
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
 
     if (isNaN(reqId)) {
       //TODO:数値型以外の場合は現状エラー。今後実装する方法について検討する。
