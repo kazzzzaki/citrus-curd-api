@@ -152,6 +152,24 @@ const setupExpressServer = () => {
   app.put("/api/user/:reqId", async function (req, res) {
     const { reqId } = req.params;
     let userData;
+    //TODO: いずれ共通化したい。
+
+    const userCount = await db.user.findAndCountAll({
+      where: { name: req.body.name },
+    });
+    if (userCount.count !== 0) {
+      return res.status(400).json({
+        errors: [
+          {
+            value: req.body.name,
+            msg: "this user name is already used",
+            param: "name",
+            location: "body",
+          },
+        ],
+      });
+    }
+
     if (isNaN(reqId)) {
       //TODO:数値型以外の場合は現状エラー。今後実装する方法について検討する。
       // const userData = await db.user.update(req.body, {
