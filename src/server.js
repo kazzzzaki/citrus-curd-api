@@ -1,13 +1,13 @@
 const express = require("express");
 const db = require("../models/index");
+const { validationResult } = require("express-validator");
+const cors = require("cors");
 const userRegistValidator = require("./userRegistValidator");
 const userUpdateValidator = require("./userUpdateValidator");
 const userQueryIdValidator = require("./userQueryIdValidator");
-const { validationResult } = require("express-validator");
-const cors = require("cors");
-const taskQueryValidator = require("./taskQueryValidator");
 const taskRegistValidator = require("./taskRegistValidator");
 const taskUpdateValidator = require("./taskUpdateValidator");
+const taskQueryValidator = require("./taskQueryValidator");
 
 const setupExpressServer = () => {
   /* return configured express app */

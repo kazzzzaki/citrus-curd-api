@@ -912,7 +912,38 @@ describe("tasklist API server", () => {
         //TODO: task
       });
       describe("DELETE /api/task - get task data", () => {
-        //TODO: task
+        it("should delete tasks with id", async () => {
+          //SETUP
+          const deleteTaskData = {
+            task: "delete task",
+            project: "new project",
+            priority: 3,
+            due: Date.parse("2020-11-20 00:00:00"),
+            comment: "new task comment",
+          };
+          await db.task.create(deleteTaskData);
+          const taskData = await db.task.findOne({
+            raw: true,
+            where: { task: deleteTaskData.task },
+          });
+
+          const requestObj = {};
+          requestObj.id = taskData.id;
+
+          //EXCERCISE
+          const res = await request
+            .delete("/api/task/1?token=kazuaki")
+            .send(requestObj);
+
+          //ASSERT
+          res.should.have.status(200);
+          const userCount = await db.task.findAndCountAll({
+            where: { task: "delete task" },
+          });
+          userCount.count.should.equal(0);
+
+          //TEARDOWN
+        });
       });
     });
   });
