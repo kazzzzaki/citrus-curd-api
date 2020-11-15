@@ -209,6 +209,33 @@ describe("tasklist API server", () => {
 
           //TEARDOWN
         });
+        it("should return error when user name not set", async () => {
+          //SETUP
+          const newUserData = {
+            token: "newUserToken",
+          };
+          const error = {
+            errors: [
+              {
+                location: "body",
+                msg: "user name is required",
+                param: "name",
+              },
+            ],
+          };
+          //EXCERCISE
+          const res = await request.post("/api/user").send(newUserData);
+
+          //ASSERT
+          res.should.have.status(400);
+          res.body.should.deep.equal(error);
+          const userCount = await db.user.findAndCountAll({
+            where: { name: "123" },
+          });
+          userCount.count.should.equal(0);
+
+          //TEARDOWN
+        });
       });
       describe("PATCH /api/user - get users data", () => {
         it("should patch users with id 2", async () => {

@@ -52,9 +52,8 @@ const setupExpressServer = () => {
   ////POST METHOD
   app.post("/api/user", validator, async function (req, res) {
     const errors = validationResult(req);
-    console.log(errors);
     if (!errors.isEmpty()) {
-      res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ errors: errors.array() });
     }
     const userCount = await db.user.findAndCountAll({
       where: { name: req.body.name },
