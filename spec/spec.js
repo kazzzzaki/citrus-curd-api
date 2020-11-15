@@ -471,6 +471,29 @@ describe("tasklist API server", () => {
 
           //TEARDOWN
         });
+        it("should return error if there were no user to patch", async () => {
+          //SETUP
+          const patchUserData = {
+            name: "patchUser",
+            token: "newUserToken",
+          };
+          const error = {
+            errors: [
+              {
+                value: "100",
+                msg: "there were no user with the requested id",
+                param: "reqId",
+                location: "params",
+              },
+            ],
+          };
+          //EXCERCISE
+          const res = await request.patch("/api/user/100").send(patchUserData);
+          //ASSERT
+          res.should.have.status(400);
+          res.body.should.deep.equal(error);
+          //TEARDOWN
+        });
       });
       describe("PUT /api/user - get users data", () => {
         it("should put users with id 4", async () => {
