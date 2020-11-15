@@ -163,7 +163,6 @@ const setupExpressServer = () => {
       const userData = await db.user.findAndCountAll({
         where: { id: reqUserId, token: userToken },
       });
-      console.log("test");
       if (userData.count === 1) {
         next();
       } else {
@@ -187,7 +186,6 @@ const setupExpressServer = () => {
     res
   ) {
     const { reqUserId } = req.params;
-
     const taskData = await db.task.findAll({ where: { userid: reqUserId } });
     res.send(taskData);
   });

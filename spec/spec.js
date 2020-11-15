@@ -832,8 +832,42 @@ describe("tasklist API server", () => {
         });
       });
       describe("POST /api/task - get task data", () => {
-        //TODO: task
+        it("should create tasks", async () => {
+          //SETUP
+          const newUserData = {
+            task: "new task",
+            project: "new project",
+            priority: 3,
+            due: Date.now(),
+            comment: "new task comment",
+          };
+
+          //EXCERCISE
+          const res = await request
+            .post("/api/task/2?token=testtoken")
+            .send(newUserData);
+
+          //ASSERT
+          res.should.have.status(201);
+          const taskData = await db.task.findAll({
+            raw: true,
+            where: { task: "new task" },
+          });
+          const expect = taskData.map((task) => {
+            task.due = task.due.toJSON();
+            task.createdAt = task.createdAt.toJSON();
+            task.updatedAt = task.updatedAt.toJSON();
+            return task;
+          });
+          JSON.parse(res.text).should.deep.equal(expect);
+
+          //TEARDOWN
+          await db.user.destroy({
+            where: { task: "new task" },
+          });
+        });
       });
+
       describe("PATCH /api/task - get task data", () => {
         //TODO: task
       });
