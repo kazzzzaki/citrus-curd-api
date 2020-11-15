@@ -57,22 +57,20 @@ const setupExpressServer = () => {
       return res.status(400).json({ errors: errors.array() });
     }
     //TODO: いずれ共通化したい。
-    if (req.body.name !== undefined) {
-      const userCount = await db.user.findAndCountAll({
-        where: { name: req.body.name },
+    const userCount = await db.user.findAndCountAll({
+      where: { name: req.body.name },
+    });
+    if (userCount.count !== 0) {
+      return res.status(400).json({
+        errors: [
+          {
+            value: req.body.name,
+            msg: "this user name is already used",
+            param: "name",
+            location: "body",
+          },
+        ],
       });
-      if (userCount.count !== 0) {
-        return res.status(400).json({
-          errors: [
-            {
-              value: req.body.name,
-              msg: "this user name is already used",
-              param: "name",
-              location: "body",
-            },
-          ],
-        });
-      }
     }
     await db.user.create(req.body);
     const userData = await db.user.findAll({
@@ -153,7 +151,6 @@ const setupExpressServer = () => {
     const { reqId } = req.params;
     let userData;
     //TODO: いずれ共通化したい。
-
     const userCount = await db.user.findAndCountAll({
       where: { name: req.body.name },
     });
