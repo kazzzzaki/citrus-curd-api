@@ -809,6 +809,27 @@ describe("tasklist API server", () => {
 
           //TEARDOWN
         });
+        it("should return 400 when token is missing", async () => {
+          //SETUP
+          const error = {
+            errors: [
+              {
+                msg: "token in the url param must not be empty",
+                param: "token",
+                location: "query",
+              },
+            ],
+          };
+
+          //EXCERCISE
+          const res = await request.get("/api/task/2");
+
+          //ASSERT
+          res.should.have.status(400);
+          res.body.should.deep.equal(error);
+
+          //TEARDOWN
+        });
       });
       describe("POST /api/task - get task data", () => {
         //TODO: task
