@@ -2,6 +2,8 @@
 
 このリポジトリは Code Chrysalis の生徒であるときに作成しました（This was created during my time as a student at Code Chrysalis）
 
+---
+
 ## ユーザ管理用 API の利用方法
 
 ### GET 　ユーザ検索
@@ -94,6 +96,24 @@ URL param で設定したユーザデータを削除できる。
   | | パラメータ | 設定内容 | 型 |
   | ---- | ---------- | ---------------------------- | ------ |
   | 必須 | id | 更新対象のユーザ ID | string |
+
+---
+
+## タスク管理用 API の利用方法
+
+作成中
+
+### GET
+
+### POST
+
+### PATCH
+
+### PUT
+
+### DELETE
+
+---
 
 ## 利用したサービス
 
