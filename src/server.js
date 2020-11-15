@@ -81,25 +81,71 @@ const setupExpressServer = () => {
   });
 
   ////PATCH METHOD
-  app.patch("/api/user/:reqId", userUpdateValidator, async function (req, res) {
-    const { reqId } = req.params;
-    let userData;
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    if (Object.keys(req.body).length === 0) {
-      return res.status(400).json({
-        errors: [
-          {
-            msg: "please request either user name or user token",
-            location: "body",
-          },
-        ],
+  app.patch(
+    "/api/user/:reqId",
+    userUpdateValidator,
+    userQueryIdValidator,
+    async function (req, res) {
+      const { reqId } = req.params;
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      if (Object.keys(req.body).length === 0) {
+        return res.status(400).json({
+          errors: [
+            {
+              msg: "please request either user name or user token",
+              location: "body",
+            },
+          ],
+        });
+      }
+      //TODO: いずれ共通化したい。
+      if (req.body.name !== undefined) {
+        const userCount = await db.user.findAndCountAll({
+          where: { name: req.body.name },
+        });
+        if (userCount.count !== 0) {
+          return res.status(400).json({
+            errors: [
+              {
+                value: req.body.name,
+                msg: "this user name is already used",
+                param: "name",
+                location: "body",
+              },
+            ],
+          });
+        }
+      }
+
+      const userData = await db.user.update(req.body, {
+        where: { id: reqId },
       });
+      if (userData) {
+        const userData = await db.user.findOne({
+          where: { id: reqId },
+        });
+        res.send(userData);
+      } else {
+        res.status(400).end();
+      }
     }
-    //TODO: いずれ共通化したい。
-    if (req.body.name !== undefined) {
+  );
+
+  ////PUT METHOD
+  app.put(
+    "/api/user/:reqId",
+    userRegistValidator,
+    userQueryIdValidator,
+    async function (req, res) {
+      const { reqId } = req.params;
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      //TODO: いずれ共通化したい。
       const userCount = await db.user.findAndCountAll({
         where: { name: req.body.name },
       });
@@ -115,23 +161,6 @@ const setupExpressServer = () => {
           ],
         });
       }
-    }
-
-    if (isNaN(reqId)) {
-      //TODO:数値型以外の場合は現状エラー。今後実装する方法について検討する。
-      // const userData = await db.user.update(req.body, {
-      //   where: { name: reqId },
-      // });
-      // if (userData) {
-      //   const userData = await db.user.findOne({
-      //     where: { name: reqId },
-      //   });
-      //   res.send(userData);
-      // } else {
-      res.status(400).send("patch needs id as number");
-      // }
-    } else {
-      //数値型の場合はwhereで検索する
       const userData = await db.user.update(req.body, {
         where: { id: reqId },
       });
@@ -144,63 +173,7 @@ const setupExpressServer = () => {
         res.status(400).end();
       }
     }
-    res.send(userData);
-  });
-
-  ////PUT METHOD
-  app.put("/api/user/:reqId", userRegistValidator, async function (req, res) {
-    const { reqId } = req.params;
-    let userData;
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    //TODO: いずれ共通化したい。
-    const userCount = await db.user.findAndCountAll({
-      where: { name: req.body.name },
-    });
-    if (userCount.count !== 0) {
-      return res.status(400).json({
-        errors: [
-          {
-            value: req.body.name,
-            msg: "this user name is already used",
-            param: "name",
-            location: "body",
-          },
-        ],
-      });
-    }
-
-    if (isNaN(reqId)) {
-      //TODO:数値型以外の場合は現状エラー。今後実装する方法について検討する。
-      // const userData = await db.user.update(req.body, {
-      //   where: { name: reqId },
-      // });
-      // if (userData) {
-      //   const userData = await db.user.findOne({
-      //     where: { name: reqId },
-      //   });
-      //   res.send(userData);
-      // } else {
-      res.status(400).send("put needs id as number");
-      // }
-    } else {
-      //数値型の場合はwhereで検索する
-      const userData = await db.user.update(req.body, {
-        where: { id: reqId },
-      });
-      if (userData) {
-        const userData = await db.user.findOne({
-          where: { id: reqId },
-        });
-        res.send(userData);
-      } else {
-        res.status(400).end();
-      }
-    }
-    res.send(userData);
-  });
+  );
 
   //DELETE METHOD
   app.delete("/api/user/:reqId", userQueryIdValidator, async function (

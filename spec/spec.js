@@ -351,13 +351,23 @@ describe("tasklist API server", () => {
             name: "patchUser2",
             token: "patchUserToken2",
           };
+          const error = {
+            errors: [
+              {
+                value: "mike",
+                msg: "id in the url param must be a number",
+                param: "reqId",
+                location: "params",
+              },
+            ],
+          };
 
           //EXCERCISE
           const res = await request.patch("/api/user/mike").send(patchUserData);
 
           //ASSERT
           res.should.have.status(400);
-          res.text.should.equal("patch needs id as number");
+          res.body.should.deep.equal(error);
           //TEARDOWN
         });
         it("should be able to update user name only", async () => {
@@ -522,13 +532,22 @@ describe("tasklist API server", () => {
             name: "putUser",
             token: "putUserToken",
           };
-
+          const error = {
+            errors: [
+              {
+                value: "Chris",
+                msg: "id in the url param must be a number",
+                param: "reqId",
+                location: "params",
+              },
+            ],
+          };
           //EXCERCISE
           const res = await request.put("/api/user/Chris").send(putUserData);
 
           //ASSERT
           res.should.have.status(400);
-          res.text.should.equal("put needs id as number");
+          res.body.should.deep.equal(error);
           //TEARDOWN
         });
         it("should return error when user name is number", async () => {
@@ -672,6 +691,25 @@ describe("tasklist API server", () => {
           };
           //EXCERCISE
           const res = await request.delete("/api/user/mike");
+          //ASSERT
+          res.should.have.status(400);
+          res.body.should.deep.equal(error);
+          //TEARDOWN
+        });
+        it("should return error if there were no user to delete", async () => {
+          //SETUP
+          const error = {
+            errors: [
+              {
+                value: "100",
+                msg: "there were no user with the requested id",
+                param: "reqId",
+                location: "params",
+              },
+            ],
+          };
+          //EXCERCISE
+          const res = await request.delete("/api/user/100");
           //ASSERT
           res.should.have.status(400);
           res.body.should.deep.equal(error);

@@ -1,5 +1,5 @@
-const { check } = require("express-validator");
+const { body } = require("express-validator");
 
 module.exports = [
-  check("name").not().isInt().withMessage("user name must not be ONLY NUMBERS"),
+  body("name").not().isInt().withMessage("user name must not be ONLY NUMBERS"),
 ];
