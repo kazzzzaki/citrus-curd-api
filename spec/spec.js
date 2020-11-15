@@ -560,6 +560,52 @@ describe("tasklist API server", () => {
 
           //TEARDOWN
         });
+        it("should return error when user name is not set", async () => {
+          //SETUP
+          const newUserData = {
+            token: "newUserToken",
+          };
+          const error = {
+            errors: [
+              {
+                msg: "user name is REQUIRED",
+                param: "name",
+                location: "body",
+              },
+            ],
+          };
+          //EXCERCISE
+          const res = await request.put("/api/user/3").send(newUserData);
+
+          //ASSERT
+          res.should.have.status(400);
+          res.body.should.deep.equal(error);
+
+          //TEARDOWN
+        });
+        it("should return error when user token is not set", async () => {
+          //SETUP
+          const newUserData = {
+            name: "newUser",
+          };
+          const error = {
+            errors: [
+              {
+                msg: "user token is REQUIRED",
+                param: "token",
+                location: "body",
+              },
+            ],
+          };
+          //EXCERCISE
+          const res = await request.put("/api/user/3").send(newUserData);
+
+          //ASSERT
+          res.should.have.status(400);
+          res.body.should.deep.equal(error);
+
+          //TEARDOWN
+        });
       });
       describe("DELETE /api/user - get users data", () => {
         //TODO:
