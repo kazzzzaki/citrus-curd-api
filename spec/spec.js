@@ -659,6 +659,17 @@ describe("tasklist API server", () => {
 
           //TEARDOWN
         });
+        it("should return error with name", async () => {
+          //SETUP
+
+          //EXCERCISE
+          const res = await request.delete("/api/user/mike");
+
+          //ASSERT
+          res.should.have.status(400);
+          res.text.should.equal("delete needs id as number");
+          //TEARDOWN
+        });
       });
     });
     describe("/api/task test", () => {
