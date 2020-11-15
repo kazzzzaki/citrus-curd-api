@@ -217,7 +217,7 @@ describe("tasklist API server", () => {
           const error = {
             errors: [
               {
-                msg: "user name is required",
+                msg: "user name is REQUIRED",
                 param: "name",
                 location: "body",
               },
@@ -255,6 +255,32 @@ describe("tasklist API server", () => {
 
           //TEARDOWN
         });
+        it("should return error when request body is empty", async () => {
+          //SETUP
+          const postUserData = {};
+          const error = {
+            errors: [
+              {
+                msg: "user name is REQUIRED",
+                param: "name",
+                location: "body",
+              },
+              {
+                msg: "user token is REQUIRED",
+                param: "token",
+                location: "body",
+              },
+            ],
+          };
+          //EXCERCISE
+          const res = await request.post("/api/user").send(postUserData);
+
+          //ASSERT
+          res.should.have.status(400);
+          res.body.should.deep.equal(error);
+
+          //TEARDOWN
+        });
       });
       describe("PATCH /api/user - get users data", () => {
         it("should patch users with id 2", async () => {
@@ -279,6 +305,25 @@ describe("tasklist API server", () => {
           await db.user.update(tearDownUserData, {
             where: { id: 2 },
           });
+        });
+        it("should return error when user name already exists", async () => {
+          //SETUP
+          const newUserData = {
+            name: "kazuaki",
+          };
+
+          //EXCERCISE
+          const res = await request.patch("/api/user/2").send(newUserData);
+
+          //ASSERT
+          res.should.have.status(400);
+          res.text.should.equal("this user name is already used");
+          const userCount = await db.user.findAndCountAll({
+            where: { name: "kazuaki" },
+          });
+          userCount.count.should.equal(1);
+
+          //TEARDOWN
         });
         it("should return error with name", async () => {
           //SETUP

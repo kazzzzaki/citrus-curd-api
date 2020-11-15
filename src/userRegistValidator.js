@@ -4,7 +4,7 @@ module.exports = [
   check("name")
     .not()
     .isEmpty()
-    .withMessage("user name is required")
+    .withMessage("user name is REQUIRED")
     .not()
     .isInt()
     .withMessage("user name must not be ONLY NUMBERS"),
