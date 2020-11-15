@@ -699,7 +699,6 @@ describe("tasklist API server", () => {
         });
       });
       describe("DELETE /api/user - get users data", () => {
-        //TODO:
         it("should delete users with id", async () => {
           //SETUP
           const deleteUserData = {
@@ -869,7 +868,45 @@ describe("tasklist API server", () => {
       });
 
       describe("PATCH /api/task - get task data", () => {
-        //TODO: task
+        it("should patch tasks with id 1", async () => {
+          //SETUP
+          const patchUserData = {
+            id: 1,
+            task: "patch task",
+            project: "patch project",
+            priority: 5,
+            due: Date.parse("2020-11-20 00:00:00"),
+            comment: "patch task comment",
+            completed: true,
+          };
+
+          //EXCERCISE
+          const res = await request
+            .patch("/api/task/1?token=kazuaki")
+            .send(patchUserData);
+
+          //ASSERT
+          res.should.have.status(200);
+          res.body.task.should.equal(patchUserData.task);
+          res.body.project.should.equal(patchUserData.project);
+          res.body.priority.should.equal(patchUserData.priority);
+          //res.body.due.should.equal(patchUserData.due);
+          res.body.comment.should.equal(patchUserData.comment);
+          res.body.completed.should.equal(patchUserData.completed);
+          //TEARDOWN
+          const tearDownUserData = {
+            id: 1,
+            task: "create GET METHOD",
+            project: "API solo project",
+            priority: 1,
+            due: Date.parse("2020-11-16 03:27:09"),
+            comment: "by TDD",
+            completed: true,
+          };
+          await db.user.update(tearDownUserData, {
+            where: { id: 1 },
+          });
+        });
       });
       describe("PUT /api/task - get task data", () => {
         //TODO: task

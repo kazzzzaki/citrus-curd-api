@@ -7,6 +7,7 @@ const { validationResult } = require("express-validator");
 const cors = require("cors");
 const taskQueryValidator = require("./taskQueryValidator");
 const taskRegistValidator = require("./taskRegistValidator");
+const taskUpdateValidator = require("./taskUpdateValidator");
 
 const setupExpressServer = () => {
   /* return configured express app */
@@ -208,6 +209,32 @@ const setupExpressServer = () => {
       where: { task: newTask.task },
     });
     res.status(201).send(taskData);
+  });
+
+  ////PATCH METHOD
+  app.patch("/api/task/:reqUserId", taskUpdateValidator, async function (
+    req,
+    res
+  ) {
+    const { reqUserId } = req.params;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const patchTask = req.body;
+    patchTask.userid = reqUserId;
+    const taskId = patchTask.id;
+    const taskData = await db.task.update(patchTask, {
+      where: { id: taskId },
+    });
+    if (taskData) {
+      const userData = await db.task.findOne({
+        where: { id: taskId },
+      });
+      res.send(userData);
+    } else {
+      res.status(400).end();
+    }
   });
 
   return app;
