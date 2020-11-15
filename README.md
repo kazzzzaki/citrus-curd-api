@@ -6,7 +6,13 @@
 
 ### GET 　ユーザ検索
 
-全ユーザのデータを取得する場合は、id や名前を指定しない。
+```
+http://localhost:3000/api/user/:id?limit=:limit&offset=:offset
+```
+
+全ユーザのデータを一括取得することができる。  
+id を URL param として付加することで、ユーザ id 検索が可能。  
+url query に limit と offset を指定することで取得するデータを制御できる。
 
 - URL param の中で設定可能なパラメータ  
   | | パラメータ | 設定内容 | 型 |
@@ -21,6 +27,10 @@
 
 ### POST 　ユーザ登録
 
+```
+http://localhost:3000/api/user
+```
+
 Request Body で設定したユーザデータを登録できる。
 
 - Content-type  
@@ -32,6 +42,10 @@ Request Body で設定したユーザデータを登録できる。
   | 必須 | token | 認証に利用するトークン文字列 | string |
 
 ### PATCH 　ユーザ更新
+
+```
+http://localhost:3000/api/user/:id
+```
 
 Request Body で設定したユーザデータに更新できる。
 
@@ -50,6 +64,10 @@ Request Body で設定したユーザデータに更新できる。
 
 ### PUT
 
+```
+http://localhost:3000/api/user/:id
+```
+
 Request Body で設定したユーザデータに更新できる。
 
 - URL param の中で設定可能なパラメータ  
@@ -65,6 +83,10 @@ Request Body で設定したユーザデータに更新できる。
   | 必須 | token | 認証に利用するトークン文字列 | string |
 
 ### DELETE
+
+```
+http://localhost:3000/api/user/:id
+```
 
 URL param で設定したユーザデータを削除できる。
 
