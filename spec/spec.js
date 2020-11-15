@@ -217,9 +217,36 @@ describe("tasklist API server", () => {
           const error = {
             errors: [
               {
-                location: "body",
                 msg: "user name is required",
                 param: "name",
+                location: "body",
+              },
+            ],
+          };
+          //EXCERCISE
+          const res = await request.post("/api/user").send(newUserData);
+
+          //ASSERT
+          res.should.have.status(400);
+          res.body.should.deep.equal(error);
+          const userCount = await db.user.findAndCountAll({
+            where: { name: "123" },
+          });
+          userCount.count.should.equal(0);
+
+          //TEARDOWN
+        });
+        it("should return error when user token is not set", async () => {
+          //SETUP
+          const newUserData = {
+            name: "newUser",
+          };
+          const error = {
+            errors: [
+              {
+                msg: "user token is required",
+                param: "token",
+                location: "body",
               },
             ],
           };
