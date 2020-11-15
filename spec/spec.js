@@ -838,7 +838,7 @@ describe("tasklist API server", () => {
             task: "new task",
             project: "new project",
             priority: 3,
-            due: Date.now(),
+            due: Date.parse("2020-11-20 00:00:00"),
             comment: "new task comment",
           };
 
@@ -862,7 +862,7 @@ describe("tasklist API server", () => {
           JSON.parse(res.text).should.deep.equal(expect);
 
           //TEARDOWN
-          await db.user.destroy({
+          await db.task.destroy({
             where: { task: "new task" },
           });
         });

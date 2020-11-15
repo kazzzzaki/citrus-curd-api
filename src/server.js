@@ -6,6 +6,7 @@ const userQueryIdValidator = require("./userQueryIdValidator");
 const { validationResult } = require("express-validator");
 const cors = require("cors");
 const taskQueryValidator = require("./taskQueryValidator");
+const taskRegistValidator = require("./taskRegistValidator");
 
 const setupExpressServer = () => {
   /* return configured express app */
@@ -188,6 +189,25 @@ const setupExpressServer = () => {
     const { reqUserId } = req.params;
     const taskData = await db.task.findAll({ where: { userid: reqUserId } });
     res.send(taskData);
+  });
+
+  ////POST METHOD
+  app.post("/api/task/:reqUserId", taskRegistValidator, async function (
+    req,
+    res
+  ) {
+    const { reqUserId } = req.params;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const newTask = req.body;
+    newTask.userid = reqUserId;
+    newTask.completed = false;
+    const taskData = await db.task.findAll({
+      where: { task: newTask.task },
+    });
+    res.status(201).send(taskData);
   });
 
   return app;
