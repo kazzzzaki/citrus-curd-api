@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "private": false,
   "scripts": {
-    "dev": "nodemon ./index.js",
+    "dev": "nodemon ./src/index.js",
     "sequelize": "sequelize",
     "lint": "eslint --fix --ext .js",
     "test": "mocha spec && yarn lint",
