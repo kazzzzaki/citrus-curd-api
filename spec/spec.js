@@ -765,7 +765,27 @@ describe("tasklist API server", () => {
     });
     describe("/api/task test", () => {
       describe("GET /api/task - get task data", () => {
-        //TODO: task
+        it("should return all tasks of selected task", async () => {
+          //SETUP
+          const taskData = await db.task.findAll({
+            raw: true,
+            where: { userId: 1 },
+          });
+          const expect = taskData.map((task) => {
+            task.createdAt = task.createdAt.toJSON();
+            task.updatedAt = task.updatedAt.toJSON();
+            return task;
+          });
+
+          //EXCERCISE
+          const res = await request.get("/api/task/1");
+
+          //ASSERT
+          res.should.have.status(200);
+          JSON.parse(res.text).should.deep.equal(expect);
+
+          //TEARDOWN
+        });
       });
       describe("POST /api/task - get task data", () => {
         //TODO: task
