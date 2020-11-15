@@ -769,9 +769,10 @@ describe("tasklist API server", () => {
           //SETUP
           const taskData = await db.task.findAll({
             raw: true,
-            where: { userId: 1 },
+            where: { userid: 1 },
           });
           const expect = taskData.map((task) => {
+            task.due = task.due.toJSON();
             task.createdAt = task.createdAt.toJSON();
             task.updatedAt = task.updatedAt.toJSON();
             return task;

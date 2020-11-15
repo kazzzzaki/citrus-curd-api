@@ -13,7 +13,7 @@ module.exports = {
      */
     return queryInterface.bulkInsert("tasks", [
       {
-        userId: 1,
+        userid: 1,
         task: "create GET METHOD",
         project: "API solo project",
         priority: 1,
@@ -24,7 +24,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        userId: 1,
+        userid: 1,
         task: "create POST METHOD",
         project: "API solo project",
         priority: 2,
@@ -35,7 +35,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        userId: 1,
+        userid: 1,
         task: "create PATCH METHOD",
         project: "API solo project",
         priority: 3,
@@ -46,7 +46,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        userId: 1,
+        userid: 1,
         task: "create DELETE METHOD",
         project: "API solo project",
         priority: 4,
@@ -57,7 +57,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        userId: 2,
+        userid: 2,
         task: "goto MUSASHIYA",
         project: "RAMEN project",
         priority: 5,

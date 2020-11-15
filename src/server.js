@@ -146,6 +146,16 @@ const setupExpressServer = () => {
     }
   });
 
+  //////
+  //////api/task/paramsのパターン
+  //////
+  ////GET
+  app.get("/api/task/:reqUserId", async function (req, res) {
+    const { reqUserId } = req.params;
+    const taskData = await db.task.findAll({ where: { userid: reqUserId } });
+    res.send(taskData);
+  });
+
   return app;
 };
 
