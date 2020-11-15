@@ -295,9 +295,28 @@ describe("tasklist API server", () => {
           res.text.should.equal("patch needs id as number");
           //TEARDOWN
         });
+        it("should be able to update user name only", async () => {
+          //SETUP
+          const patchUserData = {
+            name: "patchUser",
+          };
+
+          //EXCERCISE
+          const res = await request.patch("/api/user/2").send(patchUserData);
+
+          //ASSERT
+          res.should.have.status(200);
+          JSON.parse(res.text).name.should.equal(patchUserData.name);
+          const userCount = await db.user.findAndCountAll({
+            where: { name: "patchUser" },
+          });
+          userCount.count.should.equal(1);
+
+          //TEARDOWN
+        });
         it("should return error when user name is number", async () => {
           //SETUP
-          const newUserData = {
+          const patchUserData = {
             name: "123",
             token: "newUserToken",
           };
@@ -312,7 +331,7 @@ describe("tasklist API server", () => {
             ],
           };
           //EXCERCISE
-          const res = await request.patch("/api/user/2").send(newUserData);
+          const res = await request.patch("/api/user/2").send(patchUserData);
 
           //ASSERT
           res.should.have.status(400);
