@@ -606,6 +606,32 @@ describe("tasklist API server", () => {
 
           //TEARDOWN
         });
+        it("should return error when request body is empty", async () => {
+          //SETUP
+          const putUserData = {};
+          const error = {
+            errors: [
+              {
+                msg: "user name is REQUIRED",
+                param: "name",
+                location: "body",
+              },
+              {
+                msg: "user token is REQUIRED",
+                param: "token",
+                location: "body",
+              },
+            ],
+          };
+          //EXCERCISE
+          const res = await request.post("/api/user").send(putUserData);
+
+          //ASSERT
+          res.should.have.status(400);
+          res.body.should.deep.equal(error);
+
+          //TEARDOWN
+        });
       });
       describe("DELETE /api/user - get users data", () => {
         //TODO:
