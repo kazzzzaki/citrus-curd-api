@@ -88,7 +88,14 @@ const setupExpressServer = () => {
         ],
       });
     }
-
+    if (req.body.name !== undefined) {
+      const userCount = await db.user.findAndCountAll({
+        where: { name: req.body.name },
+      });
+      if (userCount.count !== 0) {
+        return res.status(400).send("this user name is already used");
+      }
+    }
     if (isNaN(reqId)) {
       //TODO:数値型以外の場合は現状エラー。今後実装する方法について検討する。
       // const userData = await db.user.update(req.body, {
