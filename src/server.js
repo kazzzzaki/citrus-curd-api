@@ -147,9 +147,13 @@ const setupExpressServer = () => {
   });
 
   ////PUT METHOD
-  app.put("/api/user/:reqId", async function (req, res) {
+  app.put("/api/user/:reqId", userRegistValidator, async function (req, res) {
     const { reqId } = req.params;
     let userData;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
     //TODO: いずれ共通化したい。
     const userCount = await db.user.findAndCountAll({
       where: { name: req.body.name },
