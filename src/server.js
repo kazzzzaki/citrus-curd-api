@@ -4,6 +4,7 @@ const userRegistValidator = require("./userRegistValidator");
 const userUpdateValidator = require("./userUpdateValidator");
 const userQueryIdValidator = require("./userQueryIdValidator");
 const { validationResult } = require("express-validator");
+const cors = require("cors");
 
 const setupExpressServer = () => {
   /* return configured express app */
@@ -12,14 +13,7 @@ const setupExpressServer = () => {
   app.use(express.json());
 
   // CORSを許可する
-  app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header(
-      "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept"
-    );
-    next();
-  });
+  app.use(cors());
 
   //GET Hello
   app.get("/api/hello", function (req, res) {
