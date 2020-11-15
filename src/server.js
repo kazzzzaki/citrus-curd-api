@@ -73,10 +73,20 @@ const setupExpressServer = () => {
   ////PATCH METHOD
   app.patch("/api/user/:reqId", userUpdateValidator, async function (req, res) {
     const { reqId } = req.params;
-    const errors = validationResult(req);
     let userData;
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
+    }
+    if (Object.keys(req.body).length === 0) {
+      return res.status(400).json({
+        errors: [
+          {
+            msg: "please request either user name or user token",
+            location: "body",
+          },
+        ],
+      });
     }
 
     if (isNaN(reqId)) {
