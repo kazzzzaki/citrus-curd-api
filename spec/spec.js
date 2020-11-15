@@ -313,6 +313,39 @@ describe("tasklist API server", () => {
           userCount.count.should.equal(1);
 
           //TEARDOWN
+          const tearDownUserData = {
+            name: "John",
+            token: "testtoken",
+          };
+          await db.user.update(tearDownUserData, {
+            where: { id: 2 },
+          });
+        });
+        it("should be able to update user token only", async () => {
+          //SETUP
+          const patchUserData = {
+            token: "patchUserToken",
+          };
+
+          //EXCERCISE
+          const res = await request.patch("/api/user/2").send(patchUserData);
+
+          //ASSERT
+          res.should.have.status(200);
+          JSON.parse(res.text).token.should.equal(patchUserData.token);
+          const userCount = await db.user.findAndCountAll({
+            where: { token: "patchUserToken" },
+          });
+          userCount.count.should.equal(1);
+
+          //TEARDOWN
+          const tearDownUserData = {
+            name: "John",
+            token: "testtoken",
+          };
+          await db.user.update(tearDownUserData, {
+            where: { id: 2 },
+          });
         });
         it("should return error when user name is number", async () => {
           //SETUP
