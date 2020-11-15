@@ -244,18 +244,18 @@ describe("tasklist API server", () => {
       describe("PUT /api/user - get users data", () => {
         it("should put users with id 4", async () => {
           //SETUP
-          const patchUserData = {
+          const putUserData = {
             name: "putUser",
             token: "putUserToken",
           };
 
           //EXCERCISE
-          const res = await request.put("/api/user/4").send(patchUserData);
+          const res = await request.put("/api/user/4").send(putUserData);
 
           //ASSERT
           res.should.have.status(200);
-          JSON.parse(res.text).name.should.equal(patchUserData.name);
-          JSON.parse(res.text).token.should.equal(patchUserData.token);
+          JSON.parse(res.text).name.should.equal(putUserData.name);
+          JSON.parse(res.text).token.should.equal(putUserData.token);
           //TEARDOWN
           const tearDownUserData = {
             name: "Chris",
@@ -264,6 +264,21 @@ describe("tasklist API server", () => {
           await db.user.update(tearDownUserData, {
             where: { id: 4 },
           });
+        });
+        it("should return error with name", async () => {
+          //SETUP
+          const putUserData = {
+            name: "putUser",
+            token: "putUserToken",
+          };
+
+          //EXCERCISE
+          const res = await request.put("/api/user/Chris").send(putUserData);
+
+          //ASSERT
+          res.should.have.status(400);
+          res.text.should.equal("put needs id as number");
+          //TEARDOWN
         });
       });
       describe("DELETE /api/user - get users data", () => {
