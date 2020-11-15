@@ -376,6 +376,26 @@ describe("tasklist API server", () => {
 
           //TEARDOWN
         });
+        it("should return error when request body is empty", async () => {
+          //SETUP
+          const patchUserData = {};
+          const error = {
+            errors: [
+              {
+                msg: "please request either user name or user token",
+                location: "body",
+              },
+            ],
+          };
+          //EXCERCISE
+          const res = await request.patch("/api/user/2").send(patchUserData);
+
+          //ASSERT
+          res.should.have.status(400);
+          res.body.should.deep.equal(error);
+
+          //TEARDOWN
+        });
       });
       describe("PUT /api/user - get users data", () => {
         it("should put users with id 4", async () => {
