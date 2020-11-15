@@ -1,4 +1,4 @@
-const { setupExpressServer } = require("../server");
+const { setupExpressServer } = require("../src/server");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const db = require("../models/index");
@@ -186,13 +186,22 @@ describe("tasklist API server", () => {
             name: "123",
             token: "newUserToken",
           };
-
+          const error = {
+            errors: [
+              {
+                value: "123",
+                msg: "user name must not be ONLY NUMBERS",
+                param: "name",
+                location: "body",
+              },
+            ],
+          };
           //EXCERCISE
           const res = await request.post("/api/user").send(newUserData);
 
           //ASSERT
           res.should.have.status(400);
-          res.text.should.equal("user name must not be ONLY NUMBERS");
+          res.body.should.deep.equal(error);
           const userCount = await db.user.findAndCountAll({
             where: { name: "123" },
           });

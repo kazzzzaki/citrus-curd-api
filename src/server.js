@@ -1,9 +1,12 @@
 const express = require("express");
-const db = require("./models/index");
+const db = require("../models/index");
+const validator = require("./userValidator");
+const { validationResult } = require("express-validator");
 
 const setupExpressServer = () => {
   /* return configured express app */
   const app = express();
+
   app.use(express.json());
 
   //GET Hello
@@ -47,29 +50,31 @@ const setupExpressServer = () => {
   });
 
   ////POST METHOD
-  app.post("/api/user", async function (req, res) {
-    if (isNaN(req.body.name)) {
-      const userCount = await db.user.findAndCountAll({
+  app.post("/api/user", validator, async function (req, res) {
+    const errors = validationResult(req);
+    console.log(errors);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+    }
+    const userCount = await db.user.findAndCountAll({
+      where: { name: req.body.name },
+    });
+    if (userCount.count === 0) {
+      await db.user.create(req.body);
+      const userData = await db.user.findAll({
         where: { name: req.body.name },
       });
-      if (userCount.count === 0) {
-        await db.user.create(req.body);
-        const userData = await db.user.findAll({
-          where: { name: req.body.name },
-        });
-        res.status(201).send(userData);
-      } else {
-        res.status(400).send("this user name is already used");
-      }
+      res.status(201).send(userData);
     } else {
-      res.status(400).send("user name must not be ONLY NUMBERS");
+      res.status(400).send("this user name is already used");
     }
   });
 
   ////PATCH METHOD
-  app.patch("/api/user/:reqId", async function (req, res) {
+  app.patch("/api/user/:reqId", validator, async function (req, res) {
     const { reqId } = req.params;
     let userData;
+
     if (isNaN(reqId)) {
       //TODO:数値型以外の場合は現状エラー。今後実装する方法について検討する。
       // const userData = await db.user.update(req.body, {
