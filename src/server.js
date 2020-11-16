@@ -205,6 +205,7 @@ const setupExpressServer = () => {
     const newTask = req.body;
     newTask.userid = reqUserId;
     newTask.completed = false;
+    await db.task.create(newTask);
     const taskData = await db.task.findAll({
       where: { task: newTask.task },
     });
@@ -232,6 +233,26 @@ const setupExpressServer = () => {
         where: { id: taskId },
       });
       res.send(userData);
+    } else {
+      res.status(400).end();
+    }
+  });
+
+  //DELETE METHOD
+  app.delete("/api/task/:reqUserId", taskQueryValidator, async function (
+    req,
+    res
+  ) {
+    const { reqUserId } = req.params;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const userData = await db.task.destroy({
+      where: { id: req.body.id, userid: reqUserId },
+    });
+    if (userData) {
+      res.status(200).end();
     } else {
       res.status(400).end();
     }

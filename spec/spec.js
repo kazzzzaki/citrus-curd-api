@@ -915,18 +915,20 @@ describe("tasklist API server", () => {
         it("should delete tasks with id", async () => {
           //SETUP
           const deleteTaskData = {
+            userid: 1,
             task: "delete task",
-            project: "new project",
+            project: "delete project",
             priority: 3,
             due: Date.parse("2020-11-20 00:00:00"),
-            comment: "new task comment",
+            comment: "delete task comment",
+            completed: false,
           };
           await db.task.create(deleteTaskData);
           const taskData = await db.task.findOne({
             raw: true,
             where: { task: deleteTaskData.task },
           });
-
+          console.log(taskData);
           const requestObj = {};
           requestObj.id = taskData.id;
 
