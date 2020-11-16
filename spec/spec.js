@@ -858,6 +858,7 @@ describe("tasklist API server", () => {
             task.updatedAt = task.updatedAt.toJSON();
             return task;
           });
+          console.log(res.body);
           JSON.parse(res.text).should.deep.equal(expect);
 
           //TEARDOWN
@@ -928,7 +929,6 @@ describe("tasklist API server", () => {
             raw: true,
             where: { task: deleteTaskData.task },
           });
-          console.log(taskData);
           const requestObj = {};
           requestObj.id = taskData.id;
 

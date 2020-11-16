@@ -4,6 +4,25 @@
 
 ---
 
+## セットアップ方法
+
+### このリポジトリを git クローン
+
+```
+git clone https://github.com/kazzzzaki/tasklist-crud-api.git
+```
+
+###　 postgres DB のインストールと config の編集
+config > config.json 　を修正する。
+
+###　 migration と seeding
+
+```
+yarn setup
+```
+
+---
+
 ## ユーザ管理用 API の利用方法
 
 ### GET 　ユーザ検索
