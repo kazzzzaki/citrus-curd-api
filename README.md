@@ -13,7 +13,7 @@ git clone https://github.com/kazzzzaki/tasklist-crud-api.git
 ```
 
 ###　 postgres DB のインストールと config の編集
-config > config.json 　を修正する。
+config > config.json 　の postgresdb アクセス情報を修正する。
 
 ###　 migration と seeding
 
