@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   task.init(
     {
-      userId: DataTypes.INTEGER,
+      userid: DataTypes.INTEGER,
       task: DataTypes.STRING,
       project: DataTypes.STRING,
       priority: DataTypes.INTEGER,

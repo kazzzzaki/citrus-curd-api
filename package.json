@@ -7,14 +7,15 @@
   "license": "UNLICENSED",
   "private": false,
   "scripts": {
-    "dev": "nodemon ./index.js",
+    "dev": "nodemon ./src/index.js",
     "sequelize": "sequelize",
     "lint": "eslint --fix --ext .js",
     "test": "mocha spec && yarn lint",
-    "push": "git push origin master",
+    "push": "git push origin feature/userAPI",
     "psql": "psql postgres://kazuaki@localhost:5432/database_development",
     "migrate": "yarn sequelize db:migrate:undo:all && yarn sequelize db:migrate",
     "seed": "yarn sequelize db:seed:undo:all && yarn sequelize db:seed:all",
+    "setup": "yarn migrate && yarn seed",
     "create_migration": "yarn sequelize migration:create"
   },
   "husky": {
@@ -23,7 +24,9 @@
     }
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-validator": "^6.6.1",
     "pg": "^8.5.0",
     "sequelize": "^6.3.5"
   },

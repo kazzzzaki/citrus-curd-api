@@ -1,3 +1,4 @@
 models/*js
 migrations/*js
 seeders/*js
+*.md

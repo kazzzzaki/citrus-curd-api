@@ -2,15 +2,164 @@
 
 このリポジトリは Code Chrysalis の生徒であるときに作成しました（This was created during my time as a student at Code Chrysalis）
 
-crud-api for task data
+---
 
-how to make seeds
-https://sequelize.org/master/manual/migrations.html#creating-the-first-seed
+## セットアップ方法
 
-yarn script で作成したコマンド
-yarn migrate : table drop と create table してくれる。
-yarn seed : テーブルデータの bulk delete と bulk insert をしてくれる
-yarn psql : psql の database_development データベースにログインしてくれる
-yarn push : git push origin master してくれる
-yarn test : test と lint 実行してくれる
-yarn dev : nodemon でサーバ起動してくれる
+### このリポジトリを git クローン
+
+```
+git clone https://github.com/kazzzzaki/tasklist-crud-api.git
+```
+
+###　 postgres DB のインストールと config の編集
+
+config > config.json 　の postgresdb アクセス情報を修正する。
+
+※他の DB 設定も可能
+
+###　 migration と seeding
+
+```
+yarn setup
+```
+
+---
+
+## ユーザ管理用 API の利用方法
+
+### GET 　ユーザ検索
+
+```
+http://localhost:3000/api/user/:id?limit=:limit&offset=:offset
+```
+
+全ユーザのデータを一括取得することができる。  
+id を URL param として付加することで、ユーザ id 検索が可能。  
+url query に limit と offset を指定することで取得するデータを制御できる。
+
+- URL param の中で設定可能なパラメータ  
+  | | パラメータ | 設定内容 | 型 |
+  | ---- | ---------- | --------------------------------------------- | --- |
+  | 任意 | id | ユーザ ID(設定することでユーザ ID 検索が可能) | Int |
+
+- URL query に設定可能なパラメータ  
+  | | パラメータ | 設定内容 | 型 |
+  | ---- | ---- | ---- | ---- |
+  | 任意 | limit | 取得する件数 | int |
+  | 任意 | offset | 開始位置からスキップする件数 | int |
+
+### POST 　ユーザ登録
+
+```
+http://localhost:3000/api/user
+```
+
+Request Body で設定したユーザデータを登録できる。
+
+- Content-type  
+  application/json
+- Request Body に設定可能なパラメータ  
+  | | パラメータ | 設定内容 | 型 |
+  | ---- | ---------- | ---------------------------- | ------ |
+  | 必須 | name | ユーザ名（数値のみは禁止） | string |
+  | 必須 | token | 認証に利用するトークン文字列 | string |
+
+### PATCH 　ユーザ更新
+
+```
+http://localhost:3000/api/user/:id
+```
+
+Request Body で設定したユーザデータに更新できる。
+
+- URL param の中で設定可能なパラメータ  
+  | | パラメータ | 設定内容 | 型 |
+  | ---- | ---------- | ---------------------------- | ------ |
+  | 必須 | id | 更新対象のユーザ ID | string |
+- Content-type  
+  application/json
+- Request body の中で設定するパラメータ  
+  | | パラメータ | 設定内容 | 型 |
+  | ---- | ---------- | ---------------------------- | ------ |
+  | 任意 | name | ユーザ名（数値のみは禁止） | string |
+  | 任意 | token | 認証に利用するトークン文字列 | string |
+
+  ※name か token のいずれかは必須
+
+### PUT
+
+```
+http://localhost:3000/api/user/:id
+```
+
+Request Body で設定したユーザデータに更新できる。
+
+- URL param の中で設定可能なパラメータ  
+  | | パラメータ | 設定内容 | 型 |
+  | ---- | ---------- | ---------------------------- | ------ |
+  | 必須 | id | 更新対象のユーザ ID | string |
+- Content-type  
+  application/json
+- Request body の中で設定するパラメータ  
+  | | パラメータ | 設定内容 | 型 |
+  | ---- | ---------- | ---------------------------- | ------ |
+  | 必須 | name | ユーザ名（数値のみは禁止） | string |
+  | 必須 | token | 認証に利用するトークン文字列 | string |
+
+### DELETE
+
+```
+http://localhost:3000/api/user/:id
+```
+
+URL param で設定したユーザデータを削除できる。
+
+- URL param の中で設定可能なパラメータ  
+  | | パラメータ | 設定内容 | 型 |
+  | ---- | ---------- | ---------------------------- | ------ |
+  | 必須 | id | 更新対象のユーザ ID | string |
+
+---
+
+## タスク管理用 API の利用方法
+
+作成中
+
+### GET
+
+### POST
+
+### PATCH
+
+### PUT
+
+### DELETE
+
+---
+
+## 利用したサービス
+
+### Node.js
+
+<img src="./nodejs.png" width="300">
+
+https://nodejs.org/ja/
+
+### express
+
+<img src="./Express.jpeg" width="300">
+
+https://expressjs.com/ja/
+
+### express-validator
+
+<img src="./express-validator.jpeg" width="300">
+
+https://express-validator.github.io/docs/
+
+### Sequelize
+
+<img src="./sequelize.png" width="300">
+
+https://sequelize.org/master/
